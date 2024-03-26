@@ -7,7 +7,7 @@ import pymongo
 
 
 if __name__ == '__main__':
-    server = pymongo.MongoClent('mongodb://localhost:27017/')
+    server = pymongo.MongoClient('mongodb://localhost:27017/')
     x = server.logs.nginx
     docs = x.count_documents({})
     print(f"{docs} logs")
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     for method in methods:
         num_of_docs = x.count_documents({"method": methods})
-        print(f"\t{method}: {num_of_docs}")
+        print(f"\t method {method}: {num_of_docs}")
 
     status_count = x.count_documents({"method": "GET", "path": "/status"})
     print(f"{status_count} status check")
