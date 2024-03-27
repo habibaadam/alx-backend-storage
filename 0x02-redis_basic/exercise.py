@@ -6,6 +6,19 @@ create a Cache class that will implement a simple cache using Redis
 import redis
 import uuid
 from typing import Union, Callable, Optional
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """Method that returns a count of times the class Cache
+    was called """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """Wrapper for counting calls"""
+        self._redis.incr(method.__qualname__, 1)
+        result = method(self, *args, **kwargs)
+        return result
+    return wrapper
 
 
 class Cache:
