@@ -3,7 +3,7 @@
     This script contains a function that displays some
     stats about nginx logs stored in mongoDb
 """
-import pymongo
+
 
 from pymongo import MongoClient
 if __name__ == "__main__":
