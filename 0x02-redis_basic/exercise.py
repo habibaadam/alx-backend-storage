@@ -89,11 +89,11 @@ class Cache:
         displays the history of calls of a particular function
         """
         r = redis.Redis()
-        num_of_calls = r.get(store.__qualname__).decode('utf-8')
-        all_inputs = r.lrange("{}:all_inputs".format(store.__qualname__), 0, -1)
-        all_outputs = r.lrange("{}:all_outputs".format(store.__qualname__), 0, -1)
+        call_count = r.get(store.__qualname__).decode("utf-8")
+        inputs = r.lrange("{}:inputs".format(store.__qualname__), 0, -1)
+        outputs = r.lrange("{}:outputs".format(store.__qualname__), 0, -1)
 
-        print(f"Cache.store was called {num_of_calls} times:")
-        for value, key in zip(all_inputs, all_outputs):
+        print(f"Cache.store was called {call_count} times:")
+        for value, key in zip(inputs, outputs):
             print(f"Cache.store(*{value.decode('utf-8')}) -> \
-                  {key.decode('utf-8')}")
+{key.decode('utf-8')}")
