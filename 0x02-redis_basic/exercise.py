@@ -9,7 +9,7 @@ from typing import Union
 
 
 class Cache:
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initializes a class that enables writing of a string
         into a redis server
@@ -17,7 +17,7 @@ class Cache:
         # store an instance of the Redis client as a private variable
         self._redis = redis.Redis()
         # flush the instance using flushdb.
-        self._redis.flushdb
+        self._redis.flushdb()
 
     # Create a store method that takes a data arg andreturns a string
     # data can be a str, bytes, int or float
