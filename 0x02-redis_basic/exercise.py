@@ -5,7 +5,7 @@ redis server
 """
 import redis
 import uuid
-from typing import Union
+from typing import Union, Callable, Optional
 
 
 class Cache:
@@ -32,3 +32,34 @@ class Cache:
         self._redis.mset({key: data})
         # return the key
         return key
+
+    def get(self, key: str,
+            fn: Optional[callable] = None) -> Union[str, bytes,
+                                                    int, float]:
+        """
+         method that take a key string argument and an
+         optional Callable argument named fn. This callable will be used
+         to convert the data back to the desired format
+        """
+        value = self._redis.get(key)
+        # conserve the original Redis.get behavior if the key does not exist
+        if value is None:
+            return None
+        if fn:
+            return value
+
+    def get_str(self, key: str) -> str:
+        """
+        Method that converts the data back into a string
+        """
+        data = self._redis.get(key)
+        if data is None:
+            return None
+        return data.decode('utf-8')
+
+    def get_int(self, key):
+        """Method used to convert data back into an int"""
+        data = self._redis.get(key)
+        if data is None:
+            return None
+        return int(data.decode('utf-8'))
