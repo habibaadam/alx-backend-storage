@@ -36,24 +36,23 @@ class Cache:
         optional Callable argument named fn. This callable will be used
         to convert the data back to the desired format
         """
-        value = self._redis.get(key)
-        if value is None:
+        if not self._redis.exists(key):
             return None
-        if fn:
-            return value
+        if fn is None:
+            return self._redis.get(key)
+        else:
+            return fn(self._redis.get(key))
 
     def get_str(self, key: str) -> str:
         """
         Method that converts the data back into a string
         """
-        data = self._redis.get(key)
-        if data is None:
+        if not self._redis.exists(key):
             return None
-        return data.decode('utf-8')
+        return str(self._redis.get(key))
 
     def get_int(self, key):
         """Method used to convert data back into an int"""
-        data = self._redis.get(key)
-        if data is None:
+        if not self._redis.exists(key):
             return None
-        return int(data.decode('utf-8'))
+        return int.from_bytes(self._redis.get(key), "big")
