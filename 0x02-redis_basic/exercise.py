@@ -10,25 +10,19 @@ from typing import Union, Callable, Optional
 
 class Cache:
     """ Stores data in a data key """
-    
+
     def __init__(self) -> None:
         """
         Initializes a class that enables writing of a string
         into a redis server or client
         """
-        # store an instance of the Redis client as a private variable
         self._redis = redis.Redis()
-        # flush the instance using flushdb.
         self._redis.flushdb()
 
-    # Create a store method that takes a data arg andreturns a string
-    # data can be a str, bytes, int or float
     def store(self, data: Union[str, int, bytes, float]) -> str:
         """Method that generates a key randomly to store data"""
         key = str(uuid.uuid4())
-        # store the input data in Redis using the random key
         self._redis.set(key, data)
-        # return the key
         return key
 
     def get(self, key: str,
@@ -40,7 +34,6 @@ class Cache:
          to convert the data back to the desired format
         """
         value = self._redis.get(key)
-        # conserve the original Redis.get behavior if the key does not exist
         if value is None:
             return None
         if fn:
