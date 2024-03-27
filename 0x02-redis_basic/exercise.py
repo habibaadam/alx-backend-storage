@@ -85,15 +85,15 @@ class Cache:
         return int.from_bytes(self._redis.get(key), "big")
 
 def replay(store):
-        """
-        displays the history of calls of a particular function
-        """
-        r = redis.Redis()
-        call_count = r.get(store.__qualname__).decode("utf-8")
-        inputs = r.lrange("{}:inputs".format(store.__qualname__), 0, -1)
-        outputs = r.lrange("{}:outputs".format(store.__qualname__), 0, -1)
+    """
+    displays the history of calls of a particular function
+    """
+    r = redis.Redis()
+    call_count = r.get(store.__qualname__).decode("utf-8")
+    inputs = r.lrange("{}:inputs".format(store.__qualname__), 0, -1)
+    outputs = r.lrange("{}:outputs".format(store.__qualname__), 0, -1)
 
-        print(f"Cache.store was called {call_count} times:")
-        for value, key in zip(inputs, outputs):
-            print(f"Cache.store(*{value.decode('utf-8')}) -> \
+    print(f"Cache.store was called {call_count} times:")
+    for value, key in zip(inputs, outputs):
+        print(f"Cache.store(*{value.decode('utf-8')}) -> \
 {key.decode('utf-8')}")
