@@ -84,6 +84,7 @@ class Cache:
             return None
         return int.from_bytes(self._redis.get(key), "big")
 
+
 def replay(store):
     """
     displays the history of calls of a particular function
