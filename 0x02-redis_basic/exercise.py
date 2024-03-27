@@ -86,8 +86,8 @@ class Cache:
 
 
 def replay(store):
-    """
-    displays the history of calls of a particular function
+    """This method displays the history of the
+    calls of the method passed as argument
     """
     r = redis.Redis()
     call_count = r.get(store.__qualname__).decode("utf-8")
