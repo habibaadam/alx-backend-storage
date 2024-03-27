@@ -10,6 +10,7 @@ from typing import Union, Callable, Optional
 
 class Cache:
     """ Stores data in a data key """
+    
     def __init__(self) -> None:
         """
         Initializes a class that enables writing of a string
@@ -24,12 +25,9 @@ class Cache:
     # data can be a str, bytes, int or float
     def store(self, data: Union[str, int, bytes, float]) -> str:
         """Method that generates a key randomly to store data"""
-
-        # generate a random key (e.g. using uuid
-        key = str(uuid.uuid1())
-
+        key = str(uuid.uuid4())
         # store the input data in Redis using the random key
-        self._redis.mset({key: data})
+        self._redis.set(key, data)
         # return the key
         return key
 
