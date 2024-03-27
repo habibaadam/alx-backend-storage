@@ -5,19 +5,20 @@
 """
 import pymongo
 
+from pymongo import MongoClient
+if __name__ == "__main__":
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    nginx_collection = client.logs.nginx
 
-if __name__ == '__main__':
-    server = pymongo.MongoClient('mongodb://127.0.0.1:27017/')
-    x = server.logs.nginx
-    docs = x.count_documents({})
-    print(f"{docs} logs")
+    total_doc = nginx_collection.estimated_document_count()
+    print("{} logs".format(total_doc))
 
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    list_method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     print("Methods:")
-
-    for method in methods:
-        num_of_docs = x.count_documents({"method": methods})
-        print(f"\t method {method}: {num_of_docs}")
-
-    status_count = x.count_documents({"method": "GET", "path": "/status"})
-    print(f"{status_count} status check")
+    for method in list_method:
+        count = nginx_collection.count_documents(
+                {"method": method})
+        print(f"\tmethod {method}: {count}")
+    query = {"method": "GET", "path": "/status"}
+    count_status = nginx_collection.count_documents(query)
+    print("{} status check".format(count_status))
