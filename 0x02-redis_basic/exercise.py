@@ -26,7 +26,7 @@ def call_history(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         """Wrapper for recording calls"""
-        self._redis.rpush(method.__qualname__ + ":inputs", str(args))
+        self._redis.rpush(method.__qualname__ + ":all_inputs", str(args))
         result = method(self, *args, **kwargs)
         self._redis.rpush(method.__qualname__ + ":outputs", str(result))
         return result
@@ -83,3 +83,17 @@ class Cache:
         if not self._redis.exists(key):
             return None
         return int.from_bytes(self._redis.get(key), "big")
+
+    def replay(store):
+        """
+        displays the history of calls of a particular function
+        """
+        r = redis.Redis()
+        num_of_calls = r.get(store.__qualname__).decode('utf-8')
+        all_inputs = r.lrange("{}:all_inputs".format(store.__qualname__), 0, -1)
+        all_outputs = r.lrange("{}:all_outputs".format(store.__qualname__), 0, -1)
+
+        print(f"Cache.store was called {num_of_calls} times:")
+        for value, key in zip(all_inputs, all_outputs):
+            print(f"Cache.store(*{value.decode('utf-8')}) -> \
+                  {key.decode('utf-8')}")
